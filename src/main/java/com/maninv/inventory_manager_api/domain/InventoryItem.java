@@ -27,6 +27,7 @@ public class InventoryItem {
     }
 
     // permite com que o construtor seja privado e a criação do objeto seja feita por meio estático e nunca seja um estado inválido
+    //Factory Method Pattern
     public static InventoryItem create(String productId, String storeId, String description, int initialQuantity) {
         if (initialQuantity < 0) {
             throw new BusinessException("A quantidade inicial do estoque não pode ser negativa.");
