@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 public interface InventoryRepositoryPort {
 
-    void save(InventoryItem inventoryItem);
+    void update(InventoryItem inventoryItem);
 
     void saveAll(List<InventoryItem> items);
 
