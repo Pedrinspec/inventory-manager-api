@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<String> handleDomainException(BusinessException ex) {
-        if (ex.getMessage().contains("não encontrado")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-}
+//@RestControllerAdvice
+//public class GlobalExceptionHandler {
+//
+//    @ExceptionHandler(BusinessException.class)
+//    public ResponseEntity<String> handleDomainException(BusinessException ex) {
+//        if (ex.getMessage().contains("não encontrado")) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+//        }
+//        return ResponseEntity.badRequest().body(ex.getMessage());
+//    }
+//}

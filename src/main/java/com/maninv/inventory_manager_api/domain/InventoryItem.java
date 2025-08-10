@@ -7,18 +7,17 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class InventoryItem {
 
     private final String productId;
     private final String storeId;
 
-    @Setter
     private String description;
-
     private int quantity;
     private LocalDateTime lastUpdatedAt;
 
-    private InventoryItem(String productId, String storeId, String description, int quantity) {
+    public InventoryItem(String productId, String storeId, String description, int quantity) {
         this.productId = productId;
         this.storeId = storeId;
         this.description = description;

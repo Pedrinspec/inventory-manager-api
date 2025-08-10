@@ -3,6 +3,8 @@ package com.maninv.inventory_manager_api.infra.adapters.web.controller;
 import com.maninv.inventory_manager_api.application.dto.ProductInventoryView;
 import com.maninv.inventory_manager_api.application.ports.in.CreateProductUseCase;
 import com.maninv.inventory_manager_api.application.ports.in.GetInventoryInfoUseCase;
+import com.maninv.inventory_manager_api.infra.adapters.event.dto.StockEventDTO;
+import com.maninv.inventory_manager_api.infra.adapters.event.producer.StockEventProducer;
 import com.maninv.inventory_manager_api.infra.adapters.web.dto.CreateProductRequest;
 import com.maninv.inventory_manager_api.infra.adapters.web.mapper.CreateProductMapper;
 import jakarta.validation.Valid;
@@ -25,7 +27,14 @@ public class InventoryController {
 
     private final CreateProductUseCase createProductUseCase;
     private final GetInventoryInfoUseCase getInventoryInfoUseCase;
+    private final StockEventProducer stockEventProducer;
     private final CreateProductMapper createProductMapper;
+
+    @PostMapping("/simulate/event")
+    public ResponseEntity<String> simulateStockEvent(@RequestBody StockEventDTO event) throws Exception {
+        stockEventProducer.send(event);
+        return ResponseEntity.ok("Evento enviado para o tópico Kafka com sucesso.");
+    }
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@Valid @RequestBody CreateProductRequest request) {
