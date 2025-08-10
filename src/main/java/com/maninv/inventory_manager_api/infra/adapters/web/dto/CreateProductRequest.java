@@ -15,7 +15,7 @@ public record CreateProductRequest(
         String description,
 
         @NotNull
-        @Size(min = 1, message = "Deve haver pelo menos um item de estoque inicial.")
+        @Size(min = 1, message = "Deve existir pelo menos um item de estoque inicial.")
         List<InitialStockItem> initialStock
 ) {
     public record InitialStockItem(

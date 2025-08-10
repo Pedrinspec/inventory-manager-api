@@ -7,6 +7,7 @@ import com.maninv.inventory_manager_api.infra.adapters.web.dto.CreateProductRequ
 import com.maninv.inventory_manager_api.infra.adapters.web.mapper.CreateProductMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/inventory")
 @RequiredArgsConstructor
+@Slf4j
 public class InventoryController {
 
     private final CreateProductUseCase createProductUseCase;
@@ -27,12 +29,14 @@ public class InventoryController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@Valid @RequestBody CreateProductRequest request) {
+        log.info("Requisição para criar produto {}", request);
         createProductUseCase.execute(createProductMapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/products/{productId}")
     public ResponseEntity<ProductInventoryView> getInventoryInfo(@PathVariable String productId) {
+        log.info("Requisição para obter informações de inventário do produto: {}", productId);
         return ResponseEntity.ok(getInventoryInfoUseCase.execute(productId));
     }
 
