@@ -1,0 +1,46 @@
+package com.maninv.inventory_manager_api.infra.adapters.persistence.repository;
+
+import com.maninv.inventory_manager_api.application.ports.out.InventoryRepositoryPort;
+import com.maninv.inventory_manager_api.domain.InventoryItem;
+import com.maninv.inventory_manager_api.infra.adapters.persistence.entity.InventoryItemEntity;
+import com.maninv.inventory_manager_api.infra.adapters.persistence.mapper.InventoryItemMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class InventoryItemAdapter implements InventoryRepositoryPort {
+
+    private final InventoryItemRepository repository;
+    private final InventoryItemMapper mapper;
+
+
+    @Override
+    public void update(InventoryItem inventoryItem) {
+        repository.findByStoreIdAndProductId(inventoryItem.getStoreId(), inventoryItem.getProductId())
+                .ifPresent(entity -> {
+                    InventoryItemEntity inventoryItemEntity = mapper.toEntity(inventoryItem);
+                    inventoryItemEntity.setId(entity.getId());
+                    repository.save(inventoryItemEntity);
+                });
+    }
+
+    @Override
+    public void saveAll(List<InventoryItem> items) {
+        repository.saveAll(mapper.toEntityList(items));
+    }
+
+    @Override
+    public Optional<InventoryItem> findByStoreIdAndProductId(String storeId, String productId) {
+        return repository.findByStoreIdAndProductId(storeId, productId)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public List<InventoryItem> findByProductId(String productId) {
+        return mapper.toDomainList(repository.findByProductId(productId));
+    }
+}
