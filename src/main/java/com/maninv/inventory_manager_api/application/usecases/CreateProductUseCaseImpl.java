@@ -7,7 +7,6 @@ import com.maninv.inventory_manager_api.domain.InventoryItem;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CreateProductUseCaseImpl implements CreateProductUseCase {
@@ -22,7 +21,7 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
                         stock.storeId(),
                         command.description(),
                         stock.quantity()))
-                .collect(Collectors.toList());
+                .toList();
 
         inventoryRepositoryPort.saveAll(items);
     }

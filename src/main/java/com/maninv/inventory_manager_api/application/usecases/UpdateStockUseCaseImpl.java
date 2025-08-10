@@ -26,6 +26,6 @@ public class UpdateStockUseCaseImpl implements UpdateStockUseCase {
             item.increaseStock(command.quantityChange());
         }
 
-        inventoryRepositoryPort.save(item);
+        inventoryRepositoryPort.update(item);
     }
 }

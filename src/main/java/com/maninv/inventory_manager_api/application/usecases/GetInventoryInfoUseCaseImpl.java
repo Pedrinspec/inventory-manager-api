@@ -8,7 +8,6 @@ import com.maninv.inventory_manager_api.domain.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
@@ -23,14 +22,13 @@ public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
             throw new BusinessException("Nenhum item de inventário encontrado para o produto: " + productId);
         }
 
-        // Assume que a descrição é a mesma para todas as entradas do mesmo produto.
         String description = items.getFirst().getDescription();
 
         int totalStock = items.stream().mapToInt(InventoryItem::getQuantity).sum();
 
         List<ProductInventoryView.StoreStockDetailView> stockByStore = items.stream()
                 .map(item -> new ProductInventoryView.StoreStockDetailView(item.getStoreId(), item.getQuantity()))
-                .collect(Collectors.toList());
+                .toList();
 
         return new ProductInventoryView(productId, description, totalStock, stockByStore);
     }
