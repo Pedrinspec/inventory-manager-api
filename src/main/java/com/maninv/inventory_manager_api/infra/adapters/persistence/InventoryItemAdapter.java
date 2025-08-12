@@ -1,11 +1,15 @@
-package com.maninv.inventory_manager_api.infra.adapters.persistence.repository;
+package com.maninv.inventory_manager_api.infra.adapters.persistence;
 
 import com.maninv.inventory_manager_api.application.ports.out.InventoryRepositoryPort;
 import com.maninv.inventory_manager_api.domain.InventoryItem;
 import com.maninv.inventory_manager_api.infra.adapters.persistence.entity.InventoryItemEntity;
 import com.maninv.inventory_manager_api.infra.adapters.persistence.mapper.InventoryItemMapper;
+import com.maninv.inventory_manager_api.infra.adapters.persistence.repository.InventoryItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,14 +21,20 @@ public class InventoryItemAdapter implements InventoryRepositoryPort {
     private final InventoryItemRepository repository;
     private final InventoryItemMapper mapper;
 
+    @Override
+    @Cacheable(value = "inventory", key = "#productId")
+    public List<InventoryItem> findByProductId(String productId) {
+        return mapper.toDomainList(repository.findByProductId(productId));
+    }
 
     @Override
+    @CacheEvict(value = "inventory", key = "#inventoryItem.productId")
+    @Transactional
     public void update(InventoryItem inventoryItem) {
         repository.findByStoreIdAndProductId(inventoryItem.getStoreId(), inventoryItem.getProductId())
                 .ifPresent(entity -> {
                     InventoryItemEntity inventoryItemEntity = mapper.toEntity(inventoryItem);
                     inventoryItemEntity.setId(entity.getId());
-                    repository.save(inventoryItemEntity);
                 });
     }
 
@@ -37,10 +47,5 @@ public class InventoryItemAdapter implements InventoryRepositoryPort {
     public Optional<InventoryItem> findByStoreIdAndProductId(String storeId, String productId) {
         return repository.findByStoreIdAndProductId(storeId, productId)
                 .map(mapper::toDomain);
-    }
-
-    @Override
-    public List<InventoryItem> findByProductId(String productId) {
-        return mapper.toDomainList(repository.findByProductId(productId));
     }
 }

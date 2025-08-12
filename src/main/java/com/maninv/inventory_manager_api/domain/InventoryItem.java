@@ -1,6 +1,7 @@
 package com.maninv.inventory_manager_api.domain;
 
 import com.maninv.inventory_manager_api.domain.exception.BusinessException;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,46 +9,38 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class InventoryItem {
 
     private final String productId;
     private final String storeId;
-
     private String description;
-    private int quantity;
+    private Integer quantity;
     private LocalDateTime lastUpdatedAt;
 
-    public InventoryItem(String productId, String storeId, String description, int quantity) {
-        this.productId = productId;
-        this.storeId = storeId;
-        this.description = description;
-        this.quantity = quantity;
-        this.lastUpdatedAt = LocalDateTime.now();
-    }
-
-    public static InventoryItem create(String productId, String storeId, String description, int initialQuantity) {
+    public static InventoryItem create(String productId, String storeId, String description, Integer initialQuantity) {
         if (initialQuantity < 0) {
             throw new BusinessException("A quantidade inicial do estoque não pode ser negativa.");
         }
-        return new InventoryItem(productId, storeId, description, initialQuantity);
+        return new InventoryItem(productId, storeId, description, initialQuantity, LocalDateTime.now());
     }
 
-    public void decreaseStock(int amountToDecrease) {
-        if (amountToDecrease <= 0) {
+    public void decreaseStock(Integer quantityToDecrease) {
+        if (quantityToDecrease <= 0) {
             throw new BusinessException("A quantidade a ser diminuída deve ser positiva.");
         }
-        if (this.quantity < amountToDecrease) {
+        if (this.quantity < quantityToDecrease) {
             throw new BusinessException("Estoque insuficiente para o produto: " + this.productId);
         }
-        this.quantity -= amountToDecrease;
+        this.quantity -= quantityToDecrease;
         this.lastUpdatedAt = LocalDateTime.now();
     }
 
-    public void increaseStock(int amountToIncrease) {
-        if (amountToIncrease <= 0) {
+    public void increaseStock(Integer quantityToDecrease) {
+        if (quantityToDecrease <= 0) {
             throw new BusinessException("A quantidade a ser aumentada deve ser positiva.");
         }
-        this.quantity += amountToIncrease;
+        this.quantity += quantityToDecrease;
         this.lastUpdatedAt = LocalDateTime.now();
     }
 

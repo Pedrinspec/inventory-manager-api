@@ -1,7 +1,7 @@
 package com.maninv.inventory_manager_api.application.ports.in;
 
-import com.maninv.inventory_manager_api.application.dto.ProductInventoryView;
+import com.maninv.inventory_manager_api.application.dto.ProductInventoryResponse;
 
 public interface GetInventoryInfoUseCase {
-    ProductInventoryView execute(String productId);
+    ProductInventoryResponse execute(String productId);
 }

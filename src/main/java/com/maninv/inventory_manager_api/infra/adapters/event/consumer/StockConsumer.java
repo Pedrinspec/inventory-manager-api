@@ -32,6 +32,7 @@ public class StockConsumer {
         log.info("Recebido evento do tópico {}: {}", topic, eventJson);
         try {
             var eventDto = objectMapper.readValue(eventJson, StockEventDTO.class);
+            eventDto.validate();
             updateStockUseCase.execute(stockMapper.toCommand(eventDto));
             log.info("Evento {} processado com sucesso.", eventDto.eventId());
         } catch (Exception ex) {

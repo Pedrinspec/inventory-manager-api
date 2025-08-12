@@ -1,6 +1,6 @@
 package com.maninv.inventory_manager_api.infra.adapters.web.controller;
 
-import com.maninv.inventory_manager_api.application.dto.ProductInventoryView;
+import com.maninv.inventory_manager_api.application.dto.ProductInventoryResponse;
 import com.maninv.inventory_manager_api.application.ports.in.CreateProductUseCase;
 import com.maninv.inventory_manager_api.application.ports.in.GetInventoryInfoUseCase;
 import com.maninv.inventory_manager_api.infra.adapters.event.dto.StockEventDTO;
@@ -31,7 +31,7 @@ public class InventoryController {
     private final CreateProductMapper createProductMapper;
 
     @PostMapping("/simulate/event")
-    public ResponseEntity<String> simulateStockEvent(@RequestBody StockEventDTO event) throws Exception {
+    public ResponseEntity<String> simulateStockEvent(@RequestBody StockEventDTO event){
         stockEventProducer.send(event);
         return ResponseEntity.ok("Evento enviado para o tópico Kafka com sucesso.");
     }
@@ -44,7 +44,7 @@ public class InventoryController {
     }
 
     @GetMapping("/products/{productId}")
-    public ResponseEntity<ProductInventoryView> getInventoryInfo(@PathVariable String productId) {
+    public ResponseEntity<ProductInventoryResponse> getInventoryInfo(@PathVariable String productId) {
         log.info("Requisição para obter informações de inventário do produto: {}", productId);
         return ResponseEntity.ok(getInventoryInfoUseCase.execute(productId));
     }

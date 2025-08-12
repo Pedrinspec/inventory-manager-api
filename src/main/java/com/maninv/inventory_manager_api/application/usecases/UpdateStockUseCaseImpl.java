@@ -16,9 +16,7 @@ public class UpdateStockUseCaseImpl implements UpdateStockUseCase {
     public void execute(UpdateStockCommand command) {
         InventoryItem item = inventoryRepositoryPort
                 .findByStoreIdAndProductId(command.storeId(), command.productId())
-                .orElseThrow(() -> new BusinessException(
-                        "Item de inventário não encontrado para o produto: " + command.productId() +
-                                " na loja: " + command.storeId()));
+                .orElseThrow(() -> new BusinessException("Item de inventário não encontrado para o produto: " + command.productId() + " na loja: " + command.storeId()));
 
         if (command.quantityChange() < 0) {
             item.decreaseStock(Math.abs(command.quantityChange()));

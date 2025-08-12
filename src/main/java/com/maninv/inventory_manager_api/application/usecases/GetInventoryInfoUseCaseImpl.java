@@ -1,6 +1,6 @@
 package com.maninv.inventory_manager_api.application.usecases;
 
-import com.maninv.inventory_manager_api.application.dto.ProductInventoryView;
+import com.maninv.inventory_manager_api.application.dto.ProductInventoryResponse;
 import com.maninv.inventory_manager_api.application.ports.in.GetInventoryInfoUseCase;
 import com.maninv.inventory_manager_api.application.ports.out.InventoryRepositoryPort;
 import com.maninv.inventory_manager_api.domain.InventoryItem;
@@ -15,7 +15,7 @@ public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
     private final InventoryRepositoryPort inventoryRepositoryPort;
 
     @Override
-    public ProductInventoryView execute(String productId) {
+    public ProductInventoryResponse execute(String productId) {
         List<InventoryItem> items = inventoryRepositoryPort.findByProductId(productId);
 
         if (items.isEmpty()) {
@@ -26,10 +26,10 @@ public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
 
         int totalStock = items.stream().mapToInt(InventoryItem::getQuantity).sum();
 
-        List<ProductInventoryView.StoreStockDetailView> stockByStore = items.stream()
-                .map(item -> new ProductInventoryView.StoreStockDetailView(item.getStoreId(), item.getQuantity()))
+        List<ProductInventoryResponse.StoreStock> stockByStore = items.stream()
+                .map(item -> new ProductInventoryResponse.StoreStock(item.getStoreId(), item.getQuantity()))
                 .toList();
 
-        return new ProductInventoryView(productId, description, totalStock, stockByStore);
+        return new ProductInventoryResponse(productId, description, totalStock, stockByStore);
     }
 }

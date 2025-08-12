@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface StockMapper {
 
-    @Mapping(target = "storeId", source = "payload.storeId")
-    @Mapping(target = "productId", source = "payload.productId")
-    @Mapping(target = "quantityChange", source = "payload.quantityChange")
+    @Mapping(target = "storeId", source = "stock.storeId")
+    @Mapping(target = "productId", source = "stock.productId")
+    @Mapping(target = "quantityChange", source = "stock.quantityChange")
     UpdateStockCommand toCommand(StockEventDTO event);
 }

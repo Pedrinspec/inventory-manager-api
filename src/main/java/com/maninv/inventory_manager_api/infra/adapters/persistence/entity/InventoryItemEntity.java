@@ -36,7 +36,7 @@ public class InventoryItemEntity {
     private String description;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     private LocalDateTime lastUpdatedAt;
 
