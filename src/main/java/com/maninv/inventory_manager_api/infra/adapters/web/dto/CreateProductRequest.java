@@ -8,22 +8,22 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record CreateProductRequest(
-        @NotBlank(message = "O ID do produto não pode ser vazio.")
+        @NotBlank(message = "ProductId cannot be empty.")
         String productId,
 
-        @NotBlank(message = "A descrição do produto não pode ser vazia.")
+        @NotBlank(message = "Product description cannot be empty.")
         String description,
 
         @NotNull
-        @Size(min = 1, message = "Deve existir pelo menos um item de estoque inicial.")
+        @Size(min = 1, message = "There must be at least one beginning inventory item.")
         List<InitialStockItem> initialStock
 ) {
     public record InitialStockItem(
-            @NotBlank(message = "O ID da loja não pode ser vazio.")
+            @NotBlank(message = "Store ID cannot be empty.")
             String storeId,
 
             @NotNull
-            @PositiveOrZero(message = "A quantidade inicial não pode ser negativa.")
+            @PositiveOrZero(message = "Initial quantity cannot be negative.")
             Integer quantity
     ) {}
 }

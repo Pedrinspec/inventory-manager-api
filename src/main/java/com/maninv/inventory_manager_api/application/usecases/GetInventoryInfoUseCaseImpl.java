@@ -6,9 +6,11 @@ import com.maninv.inventory_manager_api.application.ports.out.InventoryRepositor
 import com.maninv.inventory_manager_api.domain.InventoryItem;
 import com.maninv.inventory_manager_api.domain.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
 
@@ -16,15 +18,16 @@ public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
 
     @Override
     public ProductInventoryResponse execute(String productId) {
+        log.info("In execute method GetInventoryInfoUseCase...");
         List<InventoryItem> items = inventoryRepositoryPort.findByProductId(productId);
 
         if (items.isEmpty()) {
-            throw new BusinessException("Nenhum item de inventário encontrado para o produto: " + productId);
+            throw new BusinessException("No inventory items found for the product: " + productId);
         }
 
         String description = items.getFirst().getDescription();
 
-        int totalStock = items.stream().mapToInt(InventoryItem::getQuantity).sum();
+        Integer totalStock = items.stream().mapToInt(InventoryItem::getQuantity).sum();
 
         List<ProductInventoryResponse.StoreStock> stockByStore = items.stream()
                 .map(item -> new ProductInventoryResponse.StoreStock(item.getStoreId(), item.getQuantity()))

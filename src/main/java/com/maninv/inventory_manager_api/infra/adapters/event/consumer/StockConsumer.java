@@ -28,15 +28,15 @@ public class StockConsumer {
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE
     )
     @KafkaListener(topics = "${app.kafka.topic.stock-updates}", groupId = "${spring.kafka.consumer.group-id}")
-    public void handleStockChangedEvent(String eventJson, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.info("Recebido evento do tópico {}: {}", topic, eventJson);
+    public void handleStockChangedEvent(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        log.info("Message received from topic {}: {}", topic, message);
         try {
-            var eventDto = objectMapper.readValue(eventJson, StockEventDTO.class);
-            eventDto.validate();
-            updateStockUseCase.execute(stockMapper.toCommand(eventDto));
-            log.info("Evento {} processado com sucesso.", eventDto.eventId());
+            var stockEvent = objectMapper.readValue(message, StockEventDTO.class);
+            stockEvent.validate();
+            updateStockUseCase.execute(stockMapper.toCommand(stockEvent));
+            log.info("Event {} successfully processed.", stockEvent.eventId());
         } catch (Exception ex) {
-            log.error("Erro de negócio ou desserialização ao processar evento. Lançando para retentativa/DLQ.", ex);
+            log.error("Business or deserialization error while processing event. Throwing retry/DLQ.", ex);
             throw new RuntimeException(ex);
         }
     }

@@ -32,20 +32,21 @@ public class InventoryController {
 
     @PostMapping("/simulate/event")
     public ResponseEntity<String> simulateStockEvent(@RequestBody StockEventDTO event){
+        log.info("Simulating stock event: {}", event);
         stockEventProducer.send(event);
-        return ResponseEntity.ok("Evento enviado para o tópico Kafka com sucesso.");
+        return ResponseEntity.ok("Event sent to Kafka topic successfully.");
     }
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@Valid @RequestBody CreateProductRequest request) {
-        log.info("Requisição para criar produto {}", request);
+        log.info("Request to create product {}", request);
         createProductUseCase.execute(createProductMapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/products/{productId}")
     public ResponseEntity<ProductInventoryResponse> getInventoryInfo(@PathVariable String productId) {
-        log.info("Requisição para obter informações de inventário do produto: {}", productId);
+        log.info("Request find product inventory information: {}", productId);
         return ResponseEntity.ok(getInventoryInfoUseCase.execute(productId));
     }
 

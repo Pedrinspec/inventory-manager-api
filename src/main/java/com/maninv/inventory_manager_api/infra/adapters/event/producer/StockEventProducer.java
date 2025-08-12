@@ -16,10 +16,10 @@ public class StockEventProducer {
 
     public void send(Object message) {
         try {
-            log.info("Enviando evento para o tópico {}: {}", "stock-updates-topic", message);
-            kafkaTemplate.send("stock-updates-topic", objectMapper.writeValueAsString(message));
+            log.info("Enviando evento para o tópico {}: {}", "${app.kafka.topic.stock-updates}", message);
+            kafkaTemplate.send("${app.kafka.topic.stock-updates}", objectMapper.writeValueAsString(message));
         } catch (Exception e) {
-            log.error("Erro ao enviar evento para o Kafka", e);
+            log.error("Error sending event to Kafka", e);
         }
     }
 }

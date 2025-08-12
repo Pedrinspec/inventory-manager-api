@@ -14,6 +14,6 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Inventory Manager API")
                         .version("1.0")
-                        .description("Documentação da API"));
+                        .description("API for managing inventory in a warehouse system"));
     }
 }

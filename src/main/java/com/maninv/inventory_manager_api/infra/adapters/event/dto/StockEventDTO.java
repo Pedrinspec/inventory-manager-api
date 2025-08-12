@@ -14,16 +14,19 @@ public record StockEventDTO(
 
     public void validate() {
         if (eventId == null || eventId.isBlank()) {
-            throw new IllegalArgumentException("O eventId não pode ser nulo ou vazio.");
+            throw new IllegalArgumentException("EventId cannot be null.");
         }
         if (stock == null) {
-            throw new IllegalArgumentException("O stock do evento não pode ser nulo.");
+            throw new IllegalArgumentException("stock cannot be null.");
         }
         if (stock.productId() == null || stock.productId().isBlank()) {
-            throw new IllegalArgumentException("O productId no stock não pode ser nulo ou vazio.");
+            throw new IllegalArgumentException("productId cannot be null.");
         }
         if (stock.storeId() == null || stock.storeId().isBlank()) {
-            throw new IllegalArgumentException("O storeId no stock não pode ser nulo ou vazio.");
+            throw new IllegalArgumentException("storeId cannot be null.");
+        }
+        if (stock.quantityChange() == null || stock.quantityChange() == 0) {
+            throw new IllegalArgumentException("QuantityChange cannot be null or zero.");
         }
     }
 }

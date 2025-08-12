@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<String> handleDomainException(BusinessException ex) {
-        if (ex.getMessage().contains("não encontrado")) {
+        if (ex.getMessage().contains("not found")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
         return ResponseEntity.badRequest().body(ex.getMessage());
@@ -24,14 +24,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class})
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex) {
-        log.error("Erro ao obter dados para requisição: {}", ex.getMessage());
+        log.error("Error to get data for request: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        log.error("Erro inesperado: {}", ex.getMessage());
+        log.error("Unexpected error: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
