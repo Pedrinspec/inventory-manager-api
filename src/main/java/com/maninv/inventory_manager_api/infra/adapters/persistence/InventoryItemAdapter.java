@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +31,18 @@ public class InventoryItemAdapter implements InventoryRepositoryPort {
 
     @Override
     @CacheEvict(value = "inventory", key = "#inventoryItem.productId")
-    @Transactional
     public void update(InventoryItem inventoryItem) {
         log.info("Updating inventory item: {}", inventoryItem);
         repository.findByStoreIdAndProductId(inventoryItem.getStoreId(), inventoryItem.getProductId())
                 .ifPresent(entity -> {
                     InventoryItemEntity inventoryItemEntity = mapper.toEntity(inventoryItem);
                     inventoryItemEntity.setId(entity.getId());
+                    repository.save(inventoryItemEntity);
                 });
     }
 
     @Override
+    @CacheEvict(value = "inventory", key = "#items[0].productId")
     public void saveAll(List<InventoryItem> items) {
         log.info("Saving inventory items: {}", items);
         repository.saveAll(mapper.toEntityList(items));
