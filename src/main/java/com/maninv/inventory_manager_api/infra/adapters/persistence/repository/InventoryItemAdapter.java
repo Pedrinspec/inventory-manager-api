@@ -1,10 +1,9 @@
-package com.maninv.inventory_manager_api.infra.adapters.persistence;
+package com.maninv.inventory_manager_api.infra.adapters.persistence.repository;
 
 import com.maninv.inventory_manager_api.application.ports.out.InventoryRepositoryPort;
 import com.maninv.inventory_manager_api.domain.InventoryItem;
 import com.maninv.inventory_manager_api.infra.adapters.persistence.entity.InventoryItemEntity;
 import com.maninv.inventory_manager_api.infra.adapters.persistence.mapper.InventoryItemMapper;
-import com.maninv.inventory_manager_api.infra.adapters.persistence.repository.InventoryItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
