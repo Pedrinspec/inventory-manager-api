@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.2.5"
 	id("io.spring.dependency-management") version "1.1.7"
+    id("jacoco")
 }
 
 group = "com.maninv"
@@ -11,6 +12,55 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/*Application.*",
+        "**/config/**",
+        "**/dto/**",
+        "**/exception/**",
+        "**/entity/**",
+        "**/*MapperImpl.*"
+    )
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) {
+                exclude(fileFilter)
+            }
+        })
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            excludes = listOf(
+                "**/*Application.*",
+                "**/config/**",
+                "**/dto/**",
+                "**/exception/**",
+                "**/entity/**",
+                "**/*MapperImpl.*"
+            )
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestReport)
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
 
 configurations {
