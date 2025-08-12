@@ -22,7 +22,7 @@ public class GetInventoryInfoUseCaseImpl implements GetInventoryInfoUseCase {
         List<InventoryItem> items = inventoryRepositoryPort.findByProductId(productId);
 
         if (items.isEmpty()) {
-            throw new BusinessException("No inventory items found for the product: " + productId);
+            throw new BusinessException("Inventory items not found for the product: " + productId);
         }
 
         String description = items.getFirst().getDescription();

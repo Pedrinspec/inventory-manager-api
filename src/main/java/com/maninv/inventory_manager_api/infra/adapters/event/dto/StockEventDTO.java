@@ -1,5 +1,7 @@
 package com.maninv.inventory_manager_api.infra.adapters.event.dto;
 
+import com.maninv.inventory_manager_api.domain.exception.BusinessException;
+
 public record StockEventDTO(
         String eventId,
         String timestamp,
@@ -14,19 +16,19 @@ public record StockEventDTO(
 
     public void validate() {
         if (eventId == null || eventId.isBlank()) {
-            throw new IllegalArgumentException("EventId cannot be null.");
+            throw new BusinessException("EventId cannot be null.");
         }
         if (stock == null) {
-            throw new IllegalArgumentException("stock cannot be null.");
+            throw new BusinessException("stock cannot be null.");
         }
         if (stock.productId() == null || stock.productId().isBlank()) {
-            throw new IllegalArgumentException("productId cannot be null.");
+            throw new BusinessException("productId cannot be null.");
         }
         if (stock.storeId() == null || stock.storeId().isBlank()) {
-            throw new IllegalArgumentException("storeId cannot be null.");
+            throw new BusinessException("storeId cannot be null.");
         }
         if (stock.quantityChange() == null || stock.quantityChange() == 0) {
-            throw new IllegalArgumentException("QuantityChange cannot be null or zero.");
+            throw new BusinessException("QuantityChange cannot be null or zero.");
         }
     }
 }
