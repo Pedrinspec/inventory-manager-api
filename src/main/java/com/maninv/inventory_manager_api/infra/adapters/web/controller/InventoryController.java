@@ -7,6 +7,7 @@ import com.maninv.inventory_manager_api.infra.adapters.event.dto.StockEventDTO;
 import com.maninv.inventory_manager_api.infra.adapters.event.producer.StockEventProducer;
 import com.maninv.inventory_manager_api.infra.adapters.web.dto.CreateProductRequest;
 import com.maninv.inventory_manager_api.infra.adapters.web.mapper.CreateProductMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/inventory")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Inventory Management", description = "Endpoints para gerenciar e consultar o inventário")
 public class InventoryController {
 
     private final CreateProductUseCase createProductUseCase;

@@ -1,0 +1,191 @@
+openapi: 3.0.1
+info:
+  title: Inventory Manager API
+  description: API for distributed inventory management.
+  version: "1.0"
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+tags:
+  - name: Inventory Management
+    description: Endpoints for managing and querying inventory
+
+paths:
+  /api/v1/inventory/products:
+    post:
+      tags:
+        - Inventory Management
+      summary: Creates a new product in the inventory
+      description: Registers a new product and its initial stock in one or more stores.
+      operationId: createProduct
+      requestBody:
+        description: Data for the new product to be created.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+        required: true
+      responses:
+        '201':
+          description: Product created successfully
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/inventory/products/{productId}:
+    get:
+      tags:
+        - Inventory Management
+      summary: Queries the inventory of a product
+      description: Returns the total and detailed stock by store for a given SKU.
+      operationId: getInventoryInfo
+      parameters:
+        - name: productId
+          in: path
+          description: SKU of the product to be queried
+          required: true
+          schema:
+            type: string
+          example: SKU-12345
+      responses:
+        '200':
+          description: Inventory information found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventoryResponse'
+        '404':
+          description: Product not found in inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/inventory/simulate/event:
+    post:
+      tags:
+        - Inventory Management
+      summary: Simulates a stock update event
+      description: Test endpoint to send a message to the Kafka topic, simulating an update from a store.
+      operationId: simulateStockEvent
+      requestBody:
+        description: Stock event to be simulated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockEventDTO'
+        required: true
+      responses:
+        '200':
+          description: Event sent successfully
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateProductRequest:
+      type: object
+      required:
+        - productId
+        - description
+        - initialStock
+      properties:
+        productId:
+          type: string
+          example: "SKU-TSHIRT-BLUE-M"
+        description:
+          type: string
+          example: "Blue T-Shirt Size M"
+        initialStock:
+          type: array
+          items:
+            $ref: '#/components/schemas/InitialStockItem'
+    InitialStockItem:
+      type: object
+      properties:
+        storeId:
+          type: string
+          example: "STORE-SP-01"
+        quantity:
+          type: integer
+          format: int32
+          example: 100
+
+    ProductInventoryResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+        description:
+          type: string
+        totalStock:
+          type: integer
+          format: int32
+        stockByStore:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreStockDetail'
+    StoreStockDetail:
+      type: object
+      properties:
+        storeId:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+
+    StockEventDTO:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+          enum: [STOCK_DECREASED, STOCK_INCREASED, STOCK_ADJUSTMENT]
+        stock:
+          $ref: '#/components/schemas/StockDTO'
+    StockDTO:
+      type: object
+      properties:
+        storeId:
+          type: string
+        productId:
+          type: string
+        quantityChange:
+          type: integer
+          format: int32
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string

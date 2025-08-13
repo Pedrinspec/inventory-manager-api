@@ -42,7 +42,7 @@ Essa separação garante que a lógica de negócio seja **independente de tecnol
 ### c. Tolerância a Falhas e Resiliência 🛡️
 **Justificativa:** Um sistema distribuído deve ser projetado para falhar.
 
-- **Idempotência:** Cada evento possui um `eventId` único. Uma entidade (`ProcessedEventEntity`) rastreia eventos já processados, evitando duplicidade e corrupção de dados.
+- **Idempotência:** Cada evento possui um `eventId` único.
 - **Retentativas e DLQ:** Com `@RetryableTopic` do Spring Kafka, o sistema reprocessa mensagens em caso de falhas transitórias (ex.: banco offline por 1s).  
   Mensagens “envenenadas” vão para a **DLQ** para análise, sem interromper eventos válidos.
 
