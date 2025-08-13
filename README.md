@@ -107,3 +107,8 @@ A API REST é a porta de entrada síncrona para consultas de inventário.
 O uso de IA generativa e ferramentas de desenvolvimento modernas agiliza tarefas como aceleração de testes unitários,
 auxiliam em questões e dúvidas arquiteturais, além de ajuda para fazer documentações de projeto.
 Essas tecnologias não substituem o conhecimento técnico, mas potencializam a produtividade e a qualidade do código.
+
+- **Feito por Pedro Henrique Souza Peçanha**
+- ```bash
+  https://github.com/Pedrinspec/inventory-manager-api
+  ```
